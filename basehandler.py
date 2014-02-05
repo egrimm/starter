@@ -23,6 +23,7 @@ def jinja2_factory(app):
         # Set global variables.
         'uri_for': webapp2.uri_for,
         'getattr': getattr,
+        'session': BaseHandler.session,
     })
     j.environment.tests.update({
         # Set test.
@@ -136,7 +137,8 @@ class BaseHandler(webapp2.RequestHandler):
             'is_user_admin': self.is_user_admin,
             'url': self.request.url,
             'path': self.request.path,
-            'query_string': self.request.query_string
+            'query_string': self.request.query_string,
+            'session': self.session,
         })
         kwargs.update(self.auth_config)
         if self.messages:
