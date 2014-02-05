@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Teacher Registration</h1>
+    <p style="padding:0 6em 2em 6em;">Short description outlining what the incentives are to registering and the steps of the registration process, what's required, etc.</p>
+</div>
+
+<form method="post" name="teacher-registration" id="teacher-registration" class="form-horizontal">
+    
+    <div class="alert alert-danger form-errors" {% if not error_fields %} style="display:none;" {% endif %}>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <div class="invalid-fields">
+            All highlighted fields below need to be completed.
+        </div>
+        <div class="email-match" style="display:none;">
+            Your Email Address and Confirm Email Address do not match.
+        </div>
+        <div class="password-match" style="display:none;">
+            Your Password and Confirm Password do not match.
+        </div>
+    </div>
+    
+    <fieldset style="border-bottom:1px solid #ccc;">
+        
+        <h2>School Details</h2>
+        
+        <div class="form-group {% if error_fields and 'role_number' in error_fields %}has-error{% endif %}">
+            <label for="role_number" class="col-sm-4 control-label"><span class="text-required">*</span> Role Number</label>
+            <div class="col-sm-8">
+                <input type="text" name="role_number" id="role_number" value="{{ role_number }}" class="form-control" maxlength="15">
+            </div>
+        </div>
+        
+        <div class="form-group {% if error_fields and 'subject' in error_fields %}has-error{% endif %}">
+            <label for="subject" class="col-sm-4 control-label"><span class="text-required">*</span> Subject</label>
+            <div class="col-sm-8">
+                <select name="subject" id="subject" class="form-control">
+                    <option value="">Please select</option>
+                    <option>Science</option>
+                    <option>Technology</option>
+                    <option>Engineering</option>
+                    <option>Art</option>
+                    <option>Math</option>
+                </select>
+                + <a href="#">Add another subject</a>
+            </div>
+        </div>
+        
+    </fieldset>
+    
+    <fieldset>
+	
+		<h2>Terms of Service</h2>
+        
+        <div class="col-sm-8 col-sm-offset-4">
+            
+            <textarea rows="6" readonly="true" class="form-control col-sm-12">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ullamcorper a ante at commodo. Aliquam nec nisl at sem auctor lacinia. Morbi eleifend dui pellentesque odio malesuada euismod. Sed mollis quis nulla eu varius. Nulla vitae commodo dolor. In non mi pretium, molestie nisi eu, molestie tortor. Nullam malesuada, felis non ullamcorper condimentum, tellus mauris imperdiet nisl, quis mattis nisl nulla ac ligula.
+
+Nullam consectetur a libero eget sagittis. Donec id nulla vitae lacus cursus rhoncus vulputate a ante. Donec quis sapien quis velit sollicitudin dignissim. Praesent eu nisi nec sem interdum lacinia nec quis dui. Vivamus eleifend, leo in consequat fermentum, justo odio ultrices purus, eget auctor massa ipsum nec mi. Pellentesque dui diam, interdum ac adipiscing sollicitudin, consectetur at enim. Cras facilisis iaculis enim id elementum. Aenean enim nulla, sagittis a enim at, ultrices auctor tellus. Morbi lobortis bibendum tristique. In viverra porta nulla, ut eleifend sapien ullamcorper in. Aliquam malesuada tellus vel neque commodo ullamcorper. Quisque eu accumsan turpis. Nullam nibh neque, rhoncus quis mollis at, molestie ac turpis. Nulla venenatis nisl ut sem rutrum varius. Nunc turpis nisl, fringilla ut auctor ut, tempus vitae tellus. Sed a hendrerit mauris, sit amet fermentum erat.</textarea>
+            
+            <div class="checkbox" style="margin:1em 0;">
+				<label for="agree_to_terms" class="control-label">
+					<input type="checkbox" name="agree_to_terms" id="agree_to_terms" value="1">
+					I agree to the terms of service.
+				</label>
+			</div>
+
+            <p><input type="image" alt="Submit" src="/static/images/button-submit.png"></p>
+            
+        </div>
+        
+    </fieldset>
+    
+</form>
+
+{% include "register_validator.html" %}
+
+{% endblock content %}

@@ -1,0 +1,14 @@
+*{font-family:Arial, Verdana, Helvetica, sans-serif;font-size:14px;}
+h1, h2, h3, h4{font-family:'Open Sans', sans-serif;}
+h1{font-size:44px;}
+.light{font-weight:300;}
+.semi-bold{font-weight:600;}
+#left-rail{background-color:#f5f5f5;}
+nav.navbar{background:transparent url('/static/images/background-menu.png') top left repeat-x;border-radius:0;border:none;}
+ul.navbar-nav li a{color:#ffffff !important;}
+.page-header{text-align:center;border-bottom:none;padding:0 4em;}
+.page-header h1{border-bottom:1px solid #eeeeee;padding-bottom:.5em;margin-bottom:.5em;}
+.home-intro{background: transparent url('/static/images/background-intro.png') top left repeat-x;color:#eeeeee;border-radius:5px;padding:1em;margin:1em;font-size:13px;}
+.home-intro h1{font-size:40px;margin:0;padding:0;color:#ffffff;}
+.home-intro h3{font-size:26px;margin:0;padding:0;}
+.text-required{color:#ff0000;}

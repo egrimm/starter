@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+        <meta charset="utf-8"/>
+        <title>{% block title %}Starter{% endblock %}</title>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+        <!--[if lt IE 9]>
+			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="/static/scripts/respond.min.js"></script>
+		<![endif]-->
+        <link rel="stylesheet" href="/static/css/style.css"/>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" media="all" /> 
+    </head>
+    
+    <body>
+        
+        <div class="container">
+            
+            <div class="row">
+			
+				<div class="col-sm-12">
+                    
+                    {% if messages|safe %}
+                        {% for message in messages %}
+                        <p class="alert alert-{{ message[1]|safe }}">
+                            <a class="close" data-dismiss="alert">×</a>
+                            {{ message[0]|safe }}
+                        </p>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% block content %}
+                    {% endblock content %}
+					
+                </div>
+                
+            </div>
+			
+			<div class="row">
+				<div class="col-sm-12">
+					{% block footer %}
+						<div class="text-center">
+							<ul class="nav">
+								<li><a href="/">Home</a></li>
+								{% if user == None %}
+								<li><a href="{{ login_url }}">Login</a></li>
+								{% else %}
+								<li><a href="{{ logout_url }}">Logout</a></li>
+								{% endif %}
+							</ul>
+						</div>
+					{% endblock footer %}
+				</div>
+			</div>
+            
+        </div>        
+        
+        <script src="/static/scripts/bootstrap.min.js"></script>
+        
+    </body>
+    
+</html>

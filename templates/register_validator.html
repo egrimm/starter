@@ -1,0 +1,42 @@
+<script type="text/javascript">
+	$(function(){
+		
+		$('#teacher-registration').submit(function(e){
+			//e.preventDefault();
+			
+			// remove error highlighting
+			$('.has-error').removeClass('has-error');
+			$('.form-errors, .email-match, .password-match').hide();
+			
+			var $errorsFound = false;
+			
+			// lets make our values a bit easier to reference
+			$roleNum = $('input[name=role_number]').val();
+            $subj = $('select[name=subject]').val();
+			
+			//use client for validation
+			if($roleNum == ''){
+                $('label[for=role_number]').parent().addClass('has-error');
+                $errorsFound = true;
+            }
+            
+            if($subj == ''){
+                $('label[for=subject]').parent().addClass('has-error');
+                $errorsFound = true;
+            }
+			
+			if(!$('input[name=agree_to_terms]').is(':checked')){
+				$('label[for=agree_to_terms]').parent().addClass('has-error');
+				$errorsFound = true;
+			}
+			
+			if($errorsFound){
+				$('.form-errors').fadeIn('slow');
+			}
+			
+			return !$errorsFound;
+		});
+		
+		
+	});
+</script>
