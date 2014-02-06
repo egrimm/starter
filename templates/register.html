@@ -21,6 +21,26 @@
             Your Password and Confirm Password do not match.
         </div>
     </div>
+	
+	<fieldset style="border-bottom:1px solid #ccc;">
+        
+        <h2>Personal Details</h2>
+        
+        <div class="form-group {% if error_fields and 'first_name' in error_fields %}has-error{% endif %}">
+            <label for="first_name" class="col-sm-4 control-label"><span class="text-required">*</span> First Name</label>
+            <div class="col-sm-8">
+                <input type="text" name="first_name" id="first_name" value="{{ first_name }}" class="form-control" maxlength="50">
+            </div>
+        </div>
+        
+        <div class="form-group {% if error_fields and 'last_name' in error_fields %}has-error{% endif %}">
+            <label for="last_name" class="col-sm-4 control-label"><span class="text-required">*</span> Last Name</label>
+            <div class="col-sm-8">
+                <input type="text" name="last_name" id="last_name" value="{{ last_name }}" class="form-control" maxlength="50">
+            </div>
+        </div>
+		
+	</fieldset>
     
     <fieldset style="border-bottom:1px solid #ccc;">
         
@@ -75,6 +95,6 @@ Nullam consectetur a libero eget sagittis. Donec id nulla vitae lacus cursus rho
     
 </form>
 
-{% include "register_validator.html" %}
+{% include "register-validator.html" %}
 
 {% endblock content %}

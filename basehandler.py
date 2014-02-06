@@ -88,7 +88,7 @@ class BaseHandler(webapp2.RequestHandler):
         """ Dict to hold urls for login/logout """
         return {
             'login_url': users.create_login_url(self.request.url),
-            'logout_url': users.create_logout_url(self.request.url)
+            'logout_url': users.create_logout_url('/')
         }
 
     @webapp2.cached_property

@@ -5,4 +5,13 @@
 	<h1>Dashboard</h1>
 </div>
 
+<p><a href="/register-student">Register a Student</a></p>
+
+{% if students != None %}
+	<h1>Your registered students</h1>
+	{% for student in students %}
+		<p><a href="/edit-student/{{ student.key.id() }}">{{ student.email }}</a></p>
+	{% endfor %}
+{% endif %}
+
 {% endblock content %}
