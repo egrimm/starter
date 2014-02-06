@@ -16,31 +16,53 @@ class MainHandler(BaseHandler):
 
     def get(self):
         params = {}
+
         if self.user is not None: # user has logged in with their google account
             # teacher or student?
             # students should be pre-registered by the teachers, so we should
             # have some information to go on, right?
+
             teacher = models.Teacher.query(
                 models.Teacher.user_id == self.user_id).get()
+
             student = models.Student.query(
                 models.Student.email == self.email).get()
+
             if student is not None:
-                message = 'Welcome Student!'
-                self.add_message(message, 'info')
-                self.session['teacher_key'] = student.teacher.urlsafe()
+
                 self.session['is_student'] = True
+                self.session['teacher_key'] = student.teacher.urlsafe()
+                self.session['student_key'] = student.key.urlsafe()
+
+                #activate the student if this is their first time logging in
+                if student.user_id is None:
+                    student.active = True
+                    student.user_id = self.user_id
+                    student.put()
+
+                    message = 'Welcome Student!'
+                    self.add_message(message, 'info')
+
+                # maybe check if we have a user_id for the student, and active is False
+                # indicating a later-removed student record
+
             elif teacher is None:
+                # send them to the register screen to gather further information
                 self.redirect_to('register')
+
             else:
                 #self.session['teacher_key'] = str(teacher.key)
                 message = 'Welcome Teacher!'
                 self.add_message(message, 'info')
-                self.session['teacher_key'] = teacher.key.urlsafe()
+
                 self.session['is_teacher'] = True
+                self.session['teacher_key'] = teacher.key.urlsafe()
+
         else:
-            # kill the session
+            # kill the session, in case its still active from previous login
+            # this should be taken care of by thte LoginHandler though
             self.session.clear()
-        #self.session['foo'] = 'bar'
+
         return self.render_template('home.html', **params)
 
 
@@ -128,16 +150,17 @@ class RegisterStudentHandler(BaseHandler):
         # validate fields for content, format, correct values
         # first validate all the inputs
         ok_to_proceed = True
-        required_fields = [
+
+        required_fields, error_fields = [
             'first_name',
             'last_name',
             'email',
             'school_cycle',
-            'subject']
-        error_fields = []
+            'subject'], []
+
         for field in required_fields:
-            logging.info('self.request.get(%s) = %s' % (field,
-                self.request.get(field)))
+##            logging.info('self.request.get(%s) = %s' % (field,
+##                self.request.get(field)))
             if (self.request.POST.get(field) == None or
                 self.request.POST.get(field) == ''):
                 ok_to_proceed = False
@@ -187,10 +210,16 @@ class EditStudentHandler(BaseHandler):
     @teacher_required
     def get(self, student_id):
         params = {}
-        #student = models.User(id=student_id)
         student = models.Student.get_by_id(long(student_id))
-        logging.info(student)
+        #logging.info(student)
         if student is not None:
+            # if student has already been parentally consented, then we don't
+            # want them to be editable
+            if student.parental_consent_confirmed == True:
+                message = 'The selected student has already been confirmed, \
+                and is no longer editable.'
+                self.add_message(message, 'info')
+                return self.redirect_to('dashboard')
             params['student'] = student
             return self.render_template('edit-student.html', **params)
         return self.redirect_to('dashboard')
