@@ -25,7 +25,56 @@
             
             <div class="row">
 			
-				<div class="col-sm-12">
+				<div class="col-sm-3 text-center" id="left-rail">
+                    {% block leftrail %}
+                    <img src="/static/images/logo-call-to-code.png">
+                    <br>
+                    <a href="/about">About</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/rules">Rules</a><br>
+                    g+ B <span class="glyphicon glyphicon-envelope"></span> <span class="glyphicon glyphicon-comment"></span><br>
+                    {% endblock leftrail %}
+                </div>
+				
+				<div class="col-sm-9">
+                    {% block menu %}
+                        <div class="row" style="padding:.5em 0;">
+                            <div class="col-sm-4">
+                                {% if user == None %}
+                                    <a href="{{ login_url }}">Sign in</a> or <a href="{{ login_url }}">Register</a>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-4 col-sm-offset-4">
+                                <a href="google.com"><img src="/static/images/logo-google.png" class="pull-right"></a>
+                            </div>
+                        </div>
+                            
+                        <nav class="navbar navbar-inverse">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-menu">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>                            
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/about">About</a></li>
+                                    {% if user %}
+										{% if session['is_teacher'] == True %}
+											<li><a href="/dashboard">Dashboard</a></li>
+										{% elif session['is_student'] == True %}
+											<li><a href="/student-dashboard">Dashboard</a></li>
+										{% endif %}
+                                        <li><a href="/logout">Logout</a></li>
+                                    {% endif %}
+                                    <li><a href="/events">Events</a></li>
+                                    <li><a href="/rules">Rules</a></li>
+                                    <li><a href="/faqs">FAQs</a></li>
+                                    <li><a href="/contact">Contact</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    {% endblock menu %}
                     
                     {% if messages|safe %}
                         {% for message in messages %}
@@ -38,29 +87,8 @@
                     
                     {% block content %}
                     {% endblock content %}
-					
                 </div>
-                
-            </div>
-			
-			<div class="row">
-				<div class="col-sm-12">
-					{% block footer %}
-						<div class="text-center">
-							<ul class="nav">
-								<li><a href="/">Home</a></li>
-								{% if user == None %}
-								<li><a href="{{ login_url }}">Login</a></li>
-								{% else %}
-								<li><a href="/logout">Logout</a></li>
-								{% endif %}
-								{% if session['is_teacher'] == True %}
-								<li><a href="/dashboard">Dashboard</a></li>
-								{% endif %}
-							</ul>
-						</div>
-					{% endblock footer %}
-				</div>
+				
 			</div>
             
         </div>        

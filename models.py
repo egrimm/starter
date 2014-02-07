@@ -9,6 +9,7 @@ class Person(ndb.Model):
 
 
 class Teacher(Person):
+    phone_number = ndb.StringProperty()
     role_number = ndb.StringProperty()
     subjects = ndb.StringProperty(repeated=True)
 
