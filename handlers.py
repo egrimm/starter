@@ -20,60 +20,60 @@ class MainHandler(BaseHandler):
         # not to self: move this into a LoginHandler that's set as the dest_url
         # in the login_url, maybe with an additional continue_url
 
-        if self.user is not None: # user has logged in with their google account
-            # teacher or student?
-            # students should be pre-registered by the teachers, so we should
-            # have some information to go on, right?
-
-            teacher = models.Teacher.query(
-                models.Teacher.user_id == self.user_id).get()
-
-            student = models.Student.query(
-                models.Student.email == self.email).get()
-
-            if student is not None:
-
-                # make sure parental consent has been received AND confirmed
-                if not student.parental_consent_received or \
-                    not student.parental_consent_confirmed:
-                    message = 'Sorry, but your parental consent has not yet been verified.'
-                    self.add_message(message, 'danger')
-                    return self.render_template('home.html', **params)
-
-                self.session['is_student'] = True
-                self.session['teacher_key'] = student.teacher.urlsafe()
-                self.session['student_key'] = student.key.urlsafe()
-
-                #activate the student if this is their first time logging in
-                if student.user_id is None:
-                    student.active = True
-                    student.user_id = self.user_id
-                    student.put()
-
-                    message = 'Welcome Student!'
-                    self.add_message(message, 'info')
-
-                # maybe check if we have a user_id for the student, and active is False
-                # indicating a later-removed student record
-
-            elif teacher is None:
-                # send them to the register screen to gather further information
-                self.redirect_to('register')
-
-            else:
-                message = 'Welcome Teacher!'
-                self.add_message(message, 'info')
-
-                self.session['is_teacher'] = True
-                self.session['teacher_key'] = teacher.key.urlsafe()
-
-                # send them to their dashboard
-                return self.redirect_to('dashboard')
-
-        else:
-            # kill the session, in case its still active from previous login
-            # this should be taken care of by the LogoutHandler though
-            self.session.clear()
+##        if self.user is not None: # user has logged in with their google account
+##            # teacher or student?
+##            # students should be pre-registered by the teachers, so we should
+##            # have some information to go on, right?
+##
+##            teacher = models.Teacher.query(
+##                models.Teacher.user_id == self.user_id).get()
+##
+##            student = models.Student.query(
+##                models.Student.email == self.email).get()
+##
+##            if student is not None:
+##
+##                # make sure parental consent has been received AND confirmed
+##                if not student.parental_consent_received or \
+##                    not student.parental_consent_confirmed:
+##                    message = 'Sorry, but your parental consent has not yet been verified.'
+##                    self.add_message(message, 'danger')
+##                    return self.render_template('home.html', **params)
+##
+##                self.session['is_student'] = True
+##                self.session['teacher_key'] = student.teacher.urlsafe()
+##                self.session['student_key'] = student.key.urlsafe()
+##
+##                #activate the student if this is their first time logging in
+##                if student.user_id is None:
+##                    student.active = True
+##                    student.user_id = self.user_id
+##                    student.put()
+##
+##                    message = 'Welcome Student!'
+##                    self.add_message(message, 'info')
+##
+##                # maybe check if we have a user_id for the student, and active is False
+##                # indicating a later-removed student record
+##
+##            elif teacher is None:
+##                # send them to the register screen to gather further information
+##                self.redirect_to('register')
+##
+##            else:
+##                message = 'Welcome Teacher!'
+##                self.add_message(message, 'info')
+##
+##                self.session['is_teacher'] = True
+##                self.session['teacher_key'] = teacher.key.urlsafe()
+##
+##                # send them to their dashboard
+##                return self.redirect_to('dashboard')
+##
+##        else:
+##            # kill the session, in case its still active from previous login
+##            # this should be taken care of by the LogoutHandler though
+##            self.session.clear()
 
         return self.render_template('home.html', **params)
 
@@ -83,58 +83,84 @@ class LoginHandler(BaseHandler):
         #self.redirect(self.auth_config['login_url'])
         # if we do this, the dest_url will be /login, so you'll
         # be stuck in an infinite loop
-        self.redirect(users.create_login_url('/'))# home page
-        #self.redirect(users.create_login_url('/login-return'))# LoginReturnHandler
+        #self.redirect(users.create_login_url('/'))# home page
+        self.redirect(users.create_login_url('/login-return'))# LoginReturnHandler
 
 
-##class LoginReturnHandler(BaseHandler):
-##    def get(self, continue_url='/'):
-##        """ Determine if returning login is Teacher or Student
-##
-##        based on Gmail address found:
-##            in Teacher:
-##                TeacherLoginHandler
-##            in Student:
-##                StudentLoginHandler
-##        not found:
-##            TeacherLoginHandler
-##        """
-##        params = {}
-##        params['continue_url'] = continue_url
-##
-##        if self.user is not None: # user has logged in with their google account
-##            # teacher or student?
-##            # students should be pre-registered by the teachers, so we should
-##            # have some information to go on, right?
-##
-##            student = models.Student.query(
-##                models.Student.email == self.email).get()
-##
-##            if student is not None:
-##                params['student'] = student
-##                #return self.redirect_to('student-login')
-##
-##            teacher = models.Teacher.query(
-##            models.Teacher.user_id == self.user_id).get()
-##
-##            params['teacher'] = teacher
-##            #self.redirect('teacher-login', **params)
-##            #return self.teacher_login_handler(teacher)
-##            #TeacherLoginHandler.check_teacher(teacher)
-##
-##        return self.redirect_to('home')# no user, go home
-##
-##    @classmethod
-##    def teacher_login_handler(self, teacher):
-##        pass
+class LoginReturnHandler(BaseHandler):
+    def get(self, continue_url='/'):
+        """ Determine if returning login is Teacher or Student
+
+        based on Gmail address found:
+            in Teacher:
+                TeacherLoginHandler
+            in Student:
+                StudentLoginHandler
+        not found:
+            TeacherLoginHandler
+        """
+        params = {}
+        params['continue_url'] = continue_url
+
+        if self.user is not None: # user has logged in with their google account
+            # teacher or student?
+            # students should be pre-registered by the teachers, so we should
+            # have some information to go on, right?
+
+            student = models.Student.query(
+                models.Student.email == self.email).get()
+
+            if student is not None:
+                return StudentLoginHandler(student).check_student()
+
+            teacher = models.Teacher.query(
+                models.Teacher.user_id == self.user_id).get()
+
+            return TeacherLoginHandler(teacher).check_teacher()
+
+        return self.redirect_to('home')# no user, go home
 
 
-##class TeacherLoginHandler(object):
-##    def __init__(self, teacher):
-##        self.teacher = teacher
-##
-##    def check_teacher(self):
-##        logging.info(self.teacher.user_id)
+class TeacherLoginHandler:
+    """ handler for teacher login
+
+    if we do not have their pii, send them to the register screen
+    otherwise, send them to their dashboard
+    """
+
+    def __init__(self, teacher):
+        self.teacher = teacher
+        logging.info('you inited!')
+
+    def check_teacher(self):
+        if self.teacher is not None:
+            logging.info('check_teacher: teacher.user_id: %s' % \
+                self.teacher.user_id)
+            # how can i call a redirect from here?
+            return webapp2.RequestHandler().redirect_to('dashboard')
+        return webapp2.RequestHandler().redirect_to('register')
+
+
+class StudentLoginHandler:
+    """ handler for student login
+
+    if we have the parental consent form
+    both received and confirmed
+        if their account is active
+            send them to the dashboard
+        send them to the account activation screen
+    tell them they can't do anything
+    """
+
+    def __init__(self, student):
+        self.student = student
+        logging.info('you inited!')
+
+    def check_student(self):
+        if self.student is not None:
+            logging.info('student: student.user_id: %s' % \
+                self.student.user_id)
+            # how can i call a redirect from here?
 
 
 class LogoutHandler(BaseHandler):

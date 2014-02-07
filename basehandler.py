@@ -87,8 +87,8 @@ class BaseHandler(webapp2.RequestHandler):
     def auth_config(self):
         """ Dict to hold urls for login/logout """
         return {
-            'login_url': users.create_login_url(self.request.url),
-            #'login_url': users.create_login_url('/login-return'),
+            #'login_url': users.create_login_url(self.request.url),
+            'login_url': users.create_login_url('/login-return'),
             'logout_url': users.create_logout_url('/')
         }
 
