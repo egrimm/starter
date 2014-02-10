@@ -5,8 +5,6 @@
 	<h1>Dashboard</h1>
 </div>
 
-<p><a href="/register-student">Register a Student</a></p>
-
 <h2 class="light">Your students</h2>
 {% if students.count() %}
     <p>You have registered <strong>{{ students.count() }} student{% if students.count() != 1 %}s{% endif %}</strong> so far. You can review and edit their details below.</p>
@@ -27,5 +25,32 @@
 {% else %}
     <p>You have not registered any students yet. <a href="/register-student">Click here</a> to get started.</p>
 {% endif %}
+
+<hr>
+
+<h2 class="light">More Options</h2>
+
+<div class="row">
+	<div class="col-sm-2 text-center"><h1 style="font-size:95px;color:#cccccc;">&rsaquo;</h1></div>
+	<div class="col-sm-8">
+		<h3>Download Parental Consent Forms</h3>
+		<p>Once your registration is validated you can download the parental consent forms to hand out to your students. Please send the completed forms to our partner <a href="">Real Nation</a>.</p>
+	</div>
+	<div class="col-sm-2"><img src="/static/images/icon-form.png"></div>
+</div>
+<div class="row">
+	<div class="col-sm-2 text-center"><h1 style="font-size:95px;color:#cccccc;">&rsaquo;</h1></div>
+	<div class="col-sm-8">
+		<a href="/register-student"><h3>Register more Students</h3></a>
+		<p>Enter all your students who want to take part and confirm that parental consent has been received. We will then email each student to confirm registration.</p>
+	</div>
+	<div class="col-sm-2"><img src="/static/images/icon-students.png"></div>
+</div>
+
+<hr>
+
+<h2 class="light">Resources</h2>
+
+<p>If you can't wait to learn more about Call to Code start by reading the <a href="/rules">Rules</a>, have a look at our <a href="/faqs">Frequently Asked Questions</a> or read <a href="/news">The News</a>.</p>
 
 {% endblock content %}

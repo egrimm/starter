@@ -12,3 +12,6 @@ ul.navbar-nav li a{color:#ffffff !important;}
 .home-intro h1{font-size:40px;margin:0;padding:0;color:#ffffff;}
 .home-intro h3{font-size:26px;margin:0;padding:0;}
 .text-required{color:#ff0000;}
+#countdown-timer{font-size:30px;font-weight:600;}
+#countdown-timer div{background:transparent url(/static/images/background-countdown.png) 0 0 no-repeat;width:29px;height:37px;overflow:hidden;font-size:inherit;font-weight:inherit;display:inline-block;}
+#countdown-timer span{font-size:inherit;line-height:0;}

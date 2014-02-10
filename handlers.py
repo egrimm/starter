@@ -281,6 +281,8 @@ class RegisterHandler(BaseHandler):
             self.session['teacher_key'] = teacher.key.urlsafe()
             self.session['is_teacher'] = True
 
+            self.redirect_to('register-success')
+
         else:
             # pass form arguments back to self and re-render template
             # seems like there should be a better way, tho
@@ -291,6 +293,13 @@ class RegisterHandler(BaseHandler):
             return self.render_template('register.html', **params)
 
         self.redirect_to('dashboard')
+
+
+class RegisterSuccessHandler(BaseHandler):
+
+    def get(self):
+        params = {}
+        return self.render_template('register-success.html', **params)
 
 
 class RegisterStudentHandler(BaseHandler):
