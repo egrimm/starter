@@ -43,7 +43,7 @@
                                 {% endif %}
                             </div>
                             <div class="col-sm-4 col-sm-offset-4">
-                                <a href="google.com"><img src="/static/images/logo-google.png" class="pull-right"></a>
+                                <a href="http://www.google.com" target="_blank"><img src="/static/images/logo-google.png" class="pull-right"></a>
                             </div>
                         </div>
                             
@@ -62,7 +62,7 @@
                                     {% if user %}
 										{% if session['is_teacher'] == True %}
 											<li><a href="/dashboard">Dashboard</a></li>
-										{% elif session['is_student'] == True %}
+										{% elif session['is_student'] == True  and session['active'] == True%}
 											<li><a href="/student-dashboard">Dashboard</a></li>
 										{% endif %}
                                         <li><a href="/logout">Logout</a></li>

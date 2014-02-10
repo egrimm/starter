@@ -9,7 +9,10 @@ from google.appengine.ext import ndb
 # local application/library specific imports
 import models # we are using this for authorization and storing of further pii
 from basehandler import BaseHandler
-from decorators import teacher_required, student_required, user_required
+from decorators import teacher_required, \
+    student_required, \
+    active_student_required, \
+    user_required
 
 
 class MainHandler(BaseHandler):
@@ -111,56 +114,84 @@ class LoginReturnHandler(BaseHandler):
                 models.Student.email == self.email).get()
 
             if student is not None:
-                return StudentLoginHandler(student).check_student()
+                #return StudentLoginHandler(student).check_student()
+                return self.check_student(student)
 
             teacher = models.Teacher.query(
                 models.Teacher.user_id == self.user_id).get()
 
-            return TeacherLoginHandler(teacher).check_teacher()
+            return self.check_teacher(teacher)
 
         return self.redirect_to('home')# no user, go home
 
+    def check_teacher(self, teacher):
+        if teacher is not None:
+            self.session['is_teacher'] = True
+            self.session['teacher_key'] = teacher.key.urlsafe()
+            return self.redirect_to('dashboard')
+        return self.redirect_to('register')
 
-class TeacherLoginHandler:
-    """ handler for teacher login
+    def check_student(self, student):
+        if student is not None:
+            # make sure parental consent has been received AND confirmed
+            if not student.parental_consent_received or \
+                not student.parental_consent_confirmed:
+                message = 'Sorry, but your parental consent has not yet been verified.'
+                self.add_message(message, 'danger')
+                return self.redirect_to('home')
 
-    if we do not have their pii, send them to the register screen
-    otherwise, send them to their dashboard
-    """
+            self.session['is_student'] = True
+            self.session['teacher_key'] = student.teacher.urlsafe()
+            self.session['student_key'] = student.key.urlsafe()
 
-    def __init__(self, teacher):
-        self.teacher = teacher
-        logging.info('you inited!')
-
-    def check_teacher(self):
-        if self.teacher is not None:
-            logging.info('check_teacher: teacher.user_id: %s' % \
-                self.teacher.user_id)
-            # how can i call a redirect from here?
-            return webapp2.RequestHandler().redirect_to('dashboard')
-        return webapp2.RequestHandler().redirect_to('register')
+            # has the student been activated?
+            if bool(student.active):
+                self.session['active'] = True
+                return self.redirect_to('student-dashboard')
+            # otherwise, send them to their account confirmation screen
+            self.session['active'] = False
+            return self.redirect_to('student-activation')
 
 
-class StudentLoginHandler:
-    """ handler for student login
+class StudentActivationHandler(BaseHandler):
+    """ New student activation """
+    @student_required
+    def get(self):
+        params = {}
+        return self.render_template('student-activation.html', **params)
 
-    if we have the parental consent form
-    both received and confirmed
-        if their account is active
-            send them to the dashboard
-        send them to the account activation screen
-    tell them they can't do anything
-    """
+    @student_required
+    def post(self):
+        ok_to_proceed = True
+        agree_to_terms = self.request.POST.get('agree_to_terms')
+        error_fields = []
+        if not bool(agree_to_terms):
+            ok_to_proceed = False
+            error_fields.append('agree_to_terms')
 
-    def __init__(self, student):
-        self.student = student
-        logging.info('you inited!')
-
-    def check_student(self):
-        if self.student is not None:
-            logging.info('student: student.user_id: %s' % \
-                self.student.user_id)
-            # how can i call a redirect from here?
+        if ok_to_proceed:
+            student = models.Student.query(
+                models.Student.email == self.email).get()
+            if student is not None:
+                student.active = True
+                student.user_id = self.user_id
+                student.put()
+                message = 'Thank you. Your account has been activated.'
+                self.add_message(message, 'success')
+                self.session['active'] = True
+                return self.redirect_to('student-dashboard')
+            else:
+                message = 'We\'re sorry, but something has gone terribly awry.'
+                self.add_message(message, 'danger')
+                return self.get()
+        else:
+            # pass form arguments back to self and re-render template
+            # seems like there should be a better way, tho
+            params = {}
+            for field in self.request.arguments():
+                params[field] = self.request.POST.get(field)
+            params['error_fields'] = error_fields
+            return self.render_template('student-activation.html', **params)
 
 
 class LogoutHandler(BaseHandler):
@@ -208,8 +239,6 @@ class RegisterHandler(BaseHandler):
         role_number = self.request.POST.get('role_number').strip()
         subject = self.request.POST.get('subject')# they should be able to select multi
         agree_to_terms = self.request.POST.get('agree_to_terms')
-        logging.info('agree_to_terms: %s' % agree_to_terms)
-        logging.info('agree_to_terms: %s' % bool(agree_to_terms))
 
         # validate role number - format, in accepted list, not used already
 
@@ -405,10 +434,33 @@ class DashboardHandler(BaseHandler):
 
 class StudentDashboardHandler(BaseHandler):
 
-    @student_required
+    @active_student_required
     def get(self):
         params = {}
         return self.render_template('student-dashboard.html', **params)
+
+
+## API ENDPOINTS ##
+class ValidateStudentHandler(webapp2.RequestHandler):
+    """ external api end-point
+    when passed a student_id, we will return True if the student is found,
+    has full parental consent,
+    and is active
+    and False otherwise """
+    def get(self, student_id):
+        # example: /util/validate-student/120417220130410410718
+        self.response.headers['Content-Type'] = 'text/plain'
+        student = models.Student.query(
+            models.Student.user_id == student_id,
+            models.Student.parental_consent_received == True,
+            models.Student.parental_consent_confirmed == True,
+            models.Student.active == True
+            ).get()
+        if student is not None:
+            self.response.write('True')
+            # self.response.write('student.user_id: %s' % str(student.user_id))
+        else:
+            self.response.write('False')
 
 
 ## STATIC TEMPLATE HANDLERS ##

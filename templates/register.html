@@ -87,7 +87,7 @@
 
 Nullam consectetur a libero eget sagittis. Donec id nulla vitae lacus cursus rhoncus vulputate a ante. Donec quis sapien quis velit sollicitudin dignissim. Praesent eu nisi nec sem interdum lacinia nec quis dui. Vivamus eleifend, leo in consequat fermentum, justo odio ultrices purus, eget auctor massa ipsum nec mi. Pellentesque dui diam, interdum ac adipiscing sollicitudin, consectetur at enim. Cras facilisis iaculis enim id elementum. Aenean enim nulla, sagittis a enim at, ultrices auctor tellus. Morbi lobortis bibendum tristique. In viverra porta nulla, ut eleifend sapien ullamcorper in. Aliquam malesuada tellus vel neque commodo ullamcorper. Quisque eu accumsan turpis. Nullam nibh neque, rhoncus quis mollis at, molestie ac turpis. Nulla venenatis nisl ut sem rutrum varius. Nunc turpis nisl, fringilla ut auctor ut, tempus vitae tellus. Sed a hendrerit mauris, sit amet fermentum erat.</textarea>
             
-            <div class="checkbox" style="margin:1em 0;">
+            <div class="checkbox {% if error_fields and 'agree_to_terms' in error_fields %}has-error{% endif %}" style="margin:1em 0;">
 				<label for="agree_to_terms" class="control-label">
 					<input type="checkbox" name="agree_to_terms" id="agree_to_terms" value="1">
 					I agree to the terms of service.
