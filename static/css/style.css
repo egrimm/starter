@@ -3,7 +3,7 @@ h1, h2, h3, h4{font-family:'Open Sans', sans-serif;}
 h1{font-size:44px;}
 .light{font-weight:300;}
 .semi-bold{font-weight:600;}
-#left-rail{background-color:#f5f5f5;}
+#left-rail{background-color:#f5f5f5;min-height:600px;position:relative;}
 nav.navbar{background:transparent url('/static/images/background-menu.png') top left repeat-x;border-radius:0;border:none;}
 ul.navbar-nav li a{color:#ffffff !important;}
 .page-header{text-align:center;border-bottom:none;padding:0 4em;}
@@ -13,5 +13,5 @@ ul.navbar-nav li a{color:#ffffff !important;}
 .home-intro h3{font-size:26px;margin:0;padding:0;}
 .text-required{color:#ff0000;}
 #countdown-timer{font-size:30px;font-weight:600;}
-#countdown-timer div{background:transparent url(/static/images/background-countdown.png) 0 0 no-repeat;width:29px;height:37px;overflow:hidden;font-size:inherit;font-weight:inherit;display:inline-block;}
+#countdown-timer div{background:transparent url('/static/images/background-countdown.png') 0 0 no-repeat;width:29px;height:37px;overflow:hidden;font-size:inherit;font-weight:inherit;display:inline-block;}
 #countdown-timer span{font-size:inherit;line-height:0;}

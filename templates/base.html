@@ -25,21 +25,22 @@
             
             <div class="row">
 			
-				<div class="col-sm-3 text-center" id="left-rail" style="position:relative;">
+				<div class="col-sm-3 text-center" id="left-rail">
 					{% block leftrail %}
-                    <img src="/static/images/logo-call-to-code.png" style="margin-top:4em;">
-                    <div style="position:absolute;bottom:1em;text-align:center;width:100%;">
-						<h3>Countdown</h3>
-						<p>Get ready to code in</p>
-						<div id="countdown-timer">
-							<div class="day1">3</div>
-							<div class="day2">5</div>
-							<span>:</span>
-							<div class="hour1">0</div>
-							<div class="hour2">9</div>
+						<img src="/static/images/logo-call-to-code.png" style="margin-top:4em;">
+						
+						<div style="position:absolute;bottom:1em;text-align:center;width:90%;">
+							<h3>Countdown</h3>
+							<p>Get ready to code in</p>
+							<div id="countdown-timer">
+								<div class="day1">3</div>
+								<div class="day2">5</div>
+								<span>:</span>
+								<div class="hour1">0</div>
+								<div class="hour2">9</div>
+							</div>
+							<a href="/about">About</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/rules">Rules</a><br>
 						</div>
-						<a href="/about">About</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/rules">Rules</a><br>
-					</div>
                     {% endblock leftrail %}
                 </div>
 				
