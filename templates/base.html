@@ -35,9 +35,19 @@
 							<div id="countdown-timer">
 								<div class="day1">3</div>
 								<div class="day2">5</div>
-								<span>:</span>
+								<div style="background-image:none;width:.25em;">:</div>
 								<div class="hour1">0</div>
 								<div class="hour2">9</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4 col-sm-offset-2">Days</div>
+								<div class="col-sm-4 text-center">Hours</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-11 col-sm-offset-1 text-center" style="padding:1em 0;">							
+									<div class="g-plusone"></div>									
+								</div>
 							</div>
 							<a href="/about">About</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/rules">Rules</a><br>
 						</div>
@@ -110,6 +120,12 @@
 			$(function(){
 				$('#left-rail').height(''+$('#main-content').height()+'px');
 			});
+			
+		  (function() {
+			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/platform.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
 		</script>
         
     </body>
