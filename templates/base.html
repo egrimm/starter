@@ -69,19 +69,21 @@
                                 <ul class="nav navbar-nav">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="/about">About</a></li>
-                                    {% if user %}
-										{% if session['is_teacher'] == True %}
-											<li><a href="/dashboard">Dashboard</a></li>
-										{% elif session['is_student'] == True  and session['active'] == True%}
-											<li><a href="/student-dashboard">Dashboard</a></li>
-										{% endif %}
-                                        <li><a href="/logout">Logout</a></li>
-                                    {% endif %}
                                     <li><a href="/events">Events</a></li>
                                     <li><a href="/rules">Rules</a></li>
                                     <li><a href="/faqs">FAQs</a></li>
                                     <li><a href="/contact">Contact</a></li>
                                 </ul>
+								{% if user %}
+									<ul class="nav navbar-nav pull-right">
+										{% if session['is_teacher'] == True %}
+											<li><a href="/dashboard">Dashboard</a></li>
+										{% elif session['is_student'] == True  and session['active'] == True%}
+											<li><a href="/student-dashboard">Dashboard</a></li>
+										{% endif %}
+										<li><a href="/logout">Logout</a></li>
+									</ul>
+								{% endif %}
                             </div>
                         </nav>
                     {% endblock menu %}

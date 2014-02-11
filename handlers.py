@@ -497,6 +497,12 @@ class FAQsHandler(BaseHandler):
         return self.render_template('faqs.html', **params)
 
 
+class LearnToCodeHandler(BaseHandler):
+    def get(self):
+        params = {}
+        return self.render_template('learn-to-code.html', **params)
+
+
 class NewsHandler(BaseHandler):
     def get(self):
         params = {}
