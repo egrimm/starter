@@ -20,3 +20,5 @@ class Student(Person):
     school_cycle = ndb.StringProperty()
     parental_consent_received = ndb.BooleanProperty(default=False)
     parental_consent_confirmed = ndb.BooleanProperty(default=False)
+    invitation_email_sent = ndb.DateTimeProperty()
+    competition_email_sent = ndb.DateTimeProperty()

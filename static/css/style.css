@@ -15,3 +15,7 @@ ul.navbar-nav li a{color:#ffffff !important;}
 #countdown-timer{font-size:30px;font-weight:600;}
 #countdown-timer div{background:transparent url('/static/images/background-countdown.png') 0 0 no-repeat;width:29px;height:37px;overflow:hidden;font-size:inherit;font-weight:inherit;display:inline-block;}
 #countdown-timer span{font-size:inherit;line-height:0;}
+#collapseBeginner, #collapseIntermediate, #collapseAdvanced{padding-left:2em;}
+h3.accordion-title{border-top:1px solid #eeeeee;border-bottom:1px solid #eeeeee;padding:.25em;}
+h3.accordion-title img{vertical-align:text-bottom;}
+h3.accordion-title a{text-decoration:none;}

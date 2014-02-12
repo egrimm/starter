@@ -5,6 +5,8 @@ import logging
 import webapp2
 from google.appengine.api import users # we are using this for authentication
 from google.appengine.ext import ndb
+from google.appengine.api import mail
+import datetime
 
 # local application/library specific imports
 import models # we are using this for authorization and storing of further pii
@@ -15,6 +17,7 @@ from decorators import teacher_required, \
     user_required
 import role_numbers
 import re
+
 
 class MainHandler(BaseHandler):
 
@@ -483,15 +486,58 @@ class ValidateStudentHandler(webapp2.RequestHandler):
     def get(self, student_id):
         # example: /util/validate-student/120417220130410410718
         self.response.headers['Content-Type'] = 'text/plain'
-        student = models.Student.query(
+        student = models.Student.query(ndb.AND(
             models.Student.user_id == student_id,
             models.Student.parental_consent_received == True,
             models.Student.parental_consent_confirmed == True,
             models.Student.active == True
-            ).get()
+            )).get()
         if student is not None:
             self.response.write('True')
             # self.response.write('student.user_id: %s' % str(student.user_id))
+        else:
+            self.response.write('False')
+
+
+## EMAIL HANDLERS ##
+class InviteStudentEmailHandler(webapp2.RequestHandler):
+
+    """ this is ugly, and can (should) be done better """
+
+    def get(self, student_key):
+        # example: /util/invite-student/ahBkZXZ-c3RhcnRlci10ZXN0chQLEgdTdHVkZW50GICAgICAgNAJDA
+        self.response.headers['Content-Type'] = 'text/plain'
+        student_key = ndb.Key(urlsafe=student_key)
+        student = student_key.get()
+        if student is not None:
+            # self.response.write('True')
+            if (student.parental_consent_received == True
+                and student.parental_consent_confirmed == True
+                and (student.invitation_email_sent == None
+                    or student.invitation_email_sent == '')):
+                sender_address = 'Call to Code Support <support@calltocode.ie>'
+                subject = 'Welcome to Call to Code!'
+                body = """
+Thank you for your interest in Call to Code!
+Your parental consent has been confirmed, and you are ready to activate your account!
+Please login at the link below:
+
+http://www.calltocode.ie/
+
+Thank you and good luck in the competition!
+
+The Call to Code Support Team
+"""
+
+                mail.send_mail(sender_address, student.email, subject, body)
+                student.invitation_email_sent = datetime.datetime.now()
+                student.put()
+                self.response.write('True')
+                self.response.write(body)
+
+            else:
+                self.response.write('False')
+
         else:
             self.response.write('False')
 
@@ -509,10 +555,10 @@ class ContactHandler(BaseHandler):
         return self.render_template('contact.html', **params)
 
 
-class EventsHandler(BaseHandler):
+class AnnouncementsHandler(BaseHandler):
     def get(self):
         params = {}
-        return self.render_template('events.html', **params)
+        return self.render_template('announcements.html', **params)
 
 
 class FAQsHandler(BaseHandler):
@@ -521,10 +567,10 @@ class FAQsHandler(BaseHandler):
         return self.render_template('faqs.html', **params)
 
 
-class LearnToCodeHandler(BaseHandler):
+class ResourcesHandler(BaseHandler):
     def get(self):
         params = {}
-        return self.render_template('learn-to-code.html', **params)
+        return self.render_template('resources.html', **params)
 
 
 class NewsHandler(BaseHandler):
