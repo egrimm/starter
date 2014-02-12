@@ -389,9 +389,9 @@ class EditStudentHandler(BaseHandler):
             # if the teacher is updating the email address, make sure
             # it doesnt exist somewhere else in the system
             # check for this email already in the system somewhere
-            other_student = models.Student.query(
+            other_student = models.Student.query(ndb.AND(
                 models.Student.email == email,
-                models.Student.user_id != student.user_id).get()
+                models.Student.user_id != student.user_id)).get()
             teacher = models.Teacher.query(models.Teacher.email == email).get()
 
             # validate fields for content, format, correct values
