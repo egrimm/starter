@@ -68,8 +68,6 @@
             <div class="col-sm-8">
 				<select name="school_cycle" id="school_cycle" class="form-control">
                     <option value="">Please select</option>
-                    <option {% if student.school_cycle == 'Freshman' %}selected="selected"{% endif %}>Freshman</option>
-                    <option {% if student.school_cycle == 'Sophomore' %}selected="selected"{% endif %}>Sophomore</option>
                     <option {% if student.school_cycle == 'Junior' %}selected="selected"{% endif %}>Junior</option>
                     <option {% if student.school_cycle == 'Senior' %}selected="selected"{% endif %}>Senior</option>
                 </select>
@@ -81,11 +79,12 @@
             <div class="col-sm-8">
                 <select name="subject" id="subject" class="form-control">
                     <option value="">Please select</option>
-                    <option {% if student.subject == 'Science' %}selected="selected"{% endif %}>Science</option>
-                    <option {% if student.subject == 'Technology' %}selected="selected"{% endif %}>Technology</option>
-                    <option {% if student.subject == 'Engineering' %}selected="selected"{% endif %}>Engineering</option>
-                    <option {% if student.subject == 'Art' %}selected="selected"{% endif %}>Art</option>
-                    <option {% if student.subject == 'Math' %}selected="selected"{% endif %}>Math</option>
+                    <option {% if student.subject == 'Maths' %}selected="selected"{% endif %}>Maths</option>
+					<option {% if student.subject == 'Science' %}selected="selected"{% endif %}>Science</option>
+					<option {% if student.subject == 'Technology' %}selected="selected"{% endif %}>Technology</option>
+					<option {% if student.subject == 'Engineering' %}selected="selected"{% endif %}>Engineering</option>
+					<option {% if student.subject == 'Computer Studies' %}selected="selected"{% endif %}>Computer Studies</option>
+					<option {% if student.subject == 'Other' %}selected="selected"{% endif %}>Other</option>
                 </select>
             </div>
         </div>

@@ -13,71 +13,12 @@ from decorators import teacher_required, \
     student_required, \
     active_student_required, \
     user_required
-
+import role_numbers
 
 class MainHandler(BaseHandler):
 
     def get(self):
         params = {}
-
-        # not to self: move this into a LoginHandler that's set as the dest_url
-        # in the login_url, maybe with an additional continue_url
-
-##        if self.user is not None: # user has logged in with their google account
-##            # teacher or student?
-##            # students should be pre-registered by the teachers, so we should
-##            # have some information to go on, right?
-##
-##            teacher = models.Teacher.query(
-##                models.Teacher.user_id == self.user_id).get()
-##
-##            student = models.Student.query(
-##                models.Student.email == self.email).get()
-##
-##            if student is not None:
-##
-##                # make sure parental consent has been received AND confirmed
-##                if not student.parental_consent_received or \
-##                    not student.parental_consent_confirmed:
-##                    message = 'Sorry, but your parental consent has not yet been verified.'
-##                    self.add_message(message, 'danger')
-##                    return self.render_template('home.html', **params)
-##
-##                self.session['is_student'] = True
-##                self.session['teacher_key'] = student.teacher.urlsafe()
-##                self.session['student_key'] = student.key.urlsafe()
-##
-##                #activate the student if this is their first time logging in
-##                if student.user_id is None:
-##                    student.active = True
-##                    student.user_id = self.user_id
-##                    student.put()
-##
-##                    message = 'Welcome Student!'
-##                    self.add_message(message, 'info')
-##
-##                # maybe check if we have a user_id for the student, and active is False
-##                # indicating a later-removed student record
-##
-##            elif teacher is None:
-##                # send them to the register screen to gather further information
-##                self.redirect_to('register')
-##
-##            else:
-##                message = 'Welcome Teacher!'
-##                self.add_message(message, 'info')
-##
-##                self.session['is_teacher'] = True
-##                self.session['teacher_key'] = teacher.key.urlsafe()
-##
-##                # send them to their dashboard
-##                return self.redirect_to('dashboard')
-##
-##        else:
-##            # kill the session, in case its still active from previous login
-##            # this should be taken care of by the LogoutHandler though
-##            self.session.clear()
-
         return self.render_template('home.html', **params)
 
 
@@ -264,6 +205,21 @@ class RegisterHandler(BaseHandler):
             ok_to_proceed = False
             error_fields.append('agree_to_terms')
 
+        # validate role number
+        if (role_numbers.get_role_number(role_number) is None):
+            error_fields.append('role_number')
+            ok_to_proceed = False
+            message = ('Sorry, the Role Number %s is not valid.' % role_number)
+            self.add_message(message, 'warning')
+
+        # see if role_number is already in use
+        person = models.Teacher.query(models.Teacher.role_number == role_number).get()
+        if person is not None:
+            error_fields.append('role_number')
+            ok_to_proceed = False
+            message = ('Sorry, the Role Number %s has already been registered.' % role_number)
+            self.add_message(message, 'warning')
+
         if ok_to_proceed:
 
             teacher = models.Teacher(
@@ -281,7 +237,7 @@ class RegisterHandler(BaseHandler):
             self.session['teacher_key'] = teacher.key.urlsafe()
             self.session['is_teacher'] = True
 
-            self.redirect_to('register-success')
+            return self.redirect_to('register-success')
 
         else:
             # pass form arguments back to self and re-render template
@@ -411,6 +367,9 @@ class EditStudentHandler(BaseHandler):
     def post(self, student_id):
         # should incorporate same validation here as when registering
         student = models.Student.get_by_id(long(student_id))
+
+        # if the teacher is updating the email address, make sure
+        # it doesnt exist somewhere else in the system
         if student is not None:
             first_name = self.request.POST.get('first_name').strip()
             last_name = self.request.POST.get('last_name').strip()
