@@ -14,6 +14,7 @@ from decorators import teacher_required, \
     active_student_required, \
     user_required
 import role_numbers
+import re
 
 class MainHandler(BaseHandler):
 
@@ -305,6 +306,14 @@ class RegisterStudentHandler(BaseHandler):
                 ok_to_proceed = False
                 error_fields.append(field)
 
+        # check that they are entering a GMAIL address
+        gmail_regex = r'([a-zA-Z0-9_\.\-\+])+\@g(oogle)?mail\.com'
+        if re.match(gmail_regex, email, re.IGNORECASE) is None:
+            ok_to_proceed = False
+            message = ('%s is not a valid GMAIL address.' % email)
+            self.add_message(message, 'danger')
+            error_fields.append('email')
+
         if ok_to_proceed:
 
             # check for this email already in the system somewhere
@@ -368,23 +377,79 @@ class EditStudentHandler(BaseHandler):
         # should incorporate same validation here as when registering
         student = models.Student.get_by_id(long(student_id))
 
-        # if the teacher is updating the email address, make sure
-        # it doesnt exist somewhere else in the system
         if student is not None:
+
             first_name = self.request.POST.get('first_name').strip()
             last_name = self.request.POST.get('last_name').strip()
             email = self.request.POST.get('email').lower()
             school_cycle = self.request.POST.get('school_cycle').strip()
             subject = self.request.POST.get('subject').strip()
             parental_consent_received = self.request.POST.get('parental_consent_received')
-            student.first_name = first_name
-            student.last_name = last_name
-            student.school_cycle = school_cycle
-            student.subject = subject
-            student.parental_consent_received = bool(parental_consent_received)
-            student.put()
-            message = ('Student updated successfully.')
-            self.add_message(message, 'success')
+
+            # if the teacher is updating the email address, make sure
+            # it doesnt exist somewhere else in the system
+            # check for this email already in the system somewhere
+            other_student = models.Student.query(
+                models.Student.email == email,
+                models.Student.user_id != student.user_id).get()
+            teacher = models.Teacher.query(models.Teacher.email == email).get()
+
+            # validate fields for content, format, correct values
+            # first validate all the inputs
+            ok_to_proceed = True
+
+            required_fields, error_fields = [
+                'first_name',
+                'last_name',
+                'email',
+                'school_cycle',
+                'subject'], []
+
+            for field in required_fields:
+    ##            logging.info('self.request.get(%s) = %s' % (field,
+    ##                self.request.get(field)))
+                if (self.request.POST.get(field) == None or
+                    self.request.POST.get(field) == ''):
+                    ok_to_proceed = False
+                    error_fields.append(field)
+
+            # check that they are entering a GMAIL address
+            gmail_regex = r'([a-zA-Z0-9_\.\-\+])+\@g(oogle)?mail\.com'
+            if re.match(gmail_regex, email, re.IGNORECASE) is None:
+                ok_to_proceed = False
+                message = ('%s is not a valid GMAIL address.' % email)
+                self.add_message(message, 'danger')
+                error_fields.append('email')
+
+            if teacher is not None or other_student is not None:
+                ok_to_proceed = False
+                message = ('The email address %s is already registered \
+                    elsewhere in the system.' % email)
+                self.add_message(message, 'warning')
+
+
+            if ok_to_proceed:
+
+                student.first_name = first_name
+                student.last_name = last_name
+                student.school_cycle = school_cycle
+                student.subject = subject
+                student.parental_consent_received = bool(parental_consent_received)
+                student.put()
+
+                message = ('Student updated successfully.')
+                self.add_message(message, 'success')
+
+            else:
+                # pass form arguments back to self and re-render template
+                # seems like there should be a better way, tho
+                params = {}
+                for field in self.request.arguments():
+                    params[field] = self.request.POST.get(field)
+                params['error_fields'] = error_fields
+                params['student'] = student
+                return self.render_template('edit-student.html', **params)
+
         return self.redirect_to('dashboard')
 
 
