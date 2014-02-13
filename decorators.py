@@ -19,7 +19,10 @@ def teacher_required(handler):
     def check_session(self, *args, **kwargs):
         if self.session.get('is_teacher') is None \
             or self.session.get('is_teacher') != True:
-            self.redirect(self.uri_for('home'), abort=True)
+            if users.get_current_user() is None:
+                self.redirect(self.uri_for('home'), abort=True)
+            else:
+                self.redirect(self.uri_for('register'), abort=True)
         return handler(self, *args, **kwargs)
     return check_session
 

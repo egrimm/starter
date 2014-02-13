@@ -62,7 +62,7 @@
                                 {% if user == None %}
                                     <a href="{{ login_url }}">Sign in</a> or <a href="{{ login_url }}">Register</a>
 								{% else %}
-									You are signed in as {{ email }}. <a href="/logout">Sign Out</a>
+									{{ email }} | <a href="/dashboard">Dashboard</a> | <a href="/logout">Sign Out</a>
                                 {% endif %}
                             </div>
                             <div class="col-sm-4">
@@ -87,16 +87,6 @@
                                     <li><a href="/faqs" {% if 'faqs' in path %}class="active"{% endif %}>FAQs</a></li>
                                     <li><a href="/resources" {% if 'resources' in path %}class="active"{% endif %}>Resources</a></li>
                                 </ul>
-								{% if user %}
-									<ul class="nav navbar-nav pull-right">
-										{% if session['is_teacher'] == True %}
-											<li><a href="/dashboard">Dashboard</a></li>
-										{% elif session['is_student'] == True  and session['active'] == True%}
-											<li><a href="/student-dashboard">Dashboard</a></li>
-										{% endif %}
-										<li><a href="/logout">Logout</a></li>
-									</ul>
-								{% endif %}
                             </div>
                         </nav>
                     {% endblock menu %}
