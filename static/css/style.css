@@ -7,6 +7,12 @@ h1{font-size:44px;}
 nav.navbar{background:transparent url('/static/images/background-menu.png') top left repeat-x;border-radius:0;border:none;}
 ul.navbar-nav li a{color:#ffffff !important;}
 ul.navbar-nav li a.active{font-weight:bold;}
+.navbar-nav{
+        float:none;
+        margin: 0 auto;
+        display: table;
+        table-layout: fixed;
+    }
 .page-header{text-align:center;border-bottom:none;padding:0 4em;}
 .page-header h1{border-bottom:1px solid #eeeeee;padding-bottom:.5em;margin-bottom:.5em;}
 .home-intro{background: #282828 url('/static/images/background-intro.png') top left repeat-x;color:#eeeeee;border-radius:5px;padding:1em;margin:1em;font-size:13px;}
