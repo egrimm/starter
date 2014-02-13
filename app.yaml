@@ -21,6 +21,10 @@ handlers:
   script: main.app
   login: required
   
+- url: /rn/.*
+  script: main.app
+  login: admin
+  
 - url: /.*
   script: main.app
 #  secure: always

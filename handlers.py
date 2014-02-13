@@ -476,6 +476,13 @@ class StudentDashboardHandler(BaseHandler):
         return self.render_template('student-dashboard.html', **params)
 
 
+class RealNationDashboardHandler(BaseHandler):
+
+    def get(self):
+        params = {}
+        return self.render_template('rn-dashboard.html', **params)
+
+
 ## API ENDPOINTS ##
 class ValidateStudentHandler(webapp2.RequestHandler):
     """ external api end-point
@@ -515,7 +522,8 @@ class InviteStudentEmailHandler(webapp2.RequestHandler):
                 and student.parental_consent_confirmed == True
                 and (student.invitation_email_sent == None
                     or student.invitation_email_sent == '')):
-                sender_address = 'Call to Code Support <support@calltocode.ie>'
+                # NOTE TO SELF: SENDER_ADDRESS NEEDS TO BE UPDATED!
+                sender_address = 'Call to Code Support <EricGrimm500@gmail.com>'
                 subject = 'Welcome to Call to Code!'
                 body = """
 Thank you for your interest in Call to Code!

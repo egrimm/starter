@@ -63,6 +63,11 @@ _routes = [
         name='logout',
         strict_slash=True),
 
+    RedirectRoute('/rn/dashboard',
+        handlers.RealNationDashboardHandler,
+        name='rn-dashboard',
+        strict_slash=True),
+
     RedirectRoute('/about',
         handlers.AboutHandler,
         name='about',
