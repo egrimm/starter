@@ -12,9 +12,7 @@ There are many resources available to students who are interested in computer sc
 <div id="accordion">
 
 	<h3 class="light accordion-title">
-		<a data-toggle="collapse" data-parent="accordion" href="#collapseBeginner" class="btn-collapse">
-			<img src="/static/images/button-less.png">
-		</a>
+		<a data-toggle="collapse" data-parent="accordion" href="#collapseBeginner" class="btn-collapse collapse-less"></a>
 		Beginner
 	</h3>
 	<div id="collapseBeginner" class="collapse in">
@@ -32,9 +30,7 @@ There are many resources available to students who are interested in computer sc
 	</div>
 	
 	<h3 class="light accordion-title">
-		<a data-toggle="collapse" data-parent="accordion" href="#collapseIntermediate">
-			<img src="/static/images/button-more.png">
-		</a>
+		<a data-toggle="collapse" data-parent="accordion" href="#collapseIntermediate" class="btn-collapse collapse-more"></a>
 		Intermediate
 	</h3>
 	<div id="collapseIntermediate" class="collapse">
@@ -49,9 +45,7 @@ There are many resources available to students who are interested in computer sc
 	</div>
 	
 	<h3 class="light accordion-title">
-		<a data-toggle="collapse" data-parent="accordion" href="#collapseAdvanced">
-			<img src="/static/images/button-more.png">
-		</a>
+		<a data-toggle="collapse" data-parent="accordion" href="#collapseAdvanced" class="btn-collapse collapse-more"></a>
 		Advanced
 	</h3>
 	<div id="collapseAdvanced" class="collapse">
@@ -67,10 +61,7 @@ There are many resources available to students who are interested in computer sc
 <script>
 	$(function(){
 		$(document).on('click', '.btn-collapse', function(){
-			$(this).find('img').attr('src', $(this).find('img').attr('src').split('-less').join('-more'));
-		},
-		function () {
-			$(this).find('img').attr('src', $(this).find('img').attr('src').split('-more').join('-less'));
+			$(this).toggleClass('collapse-more collapse-less');
 		});
 	});
 </script>

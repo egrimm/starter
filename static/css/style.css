@@ -16,6 +16,8 @@ ul.navbar-nav li a{color:#ffffff !important;}
 #countdown-timer div{background:transparent url('/static/images/background-countdown.png') 0 0 no-repeat;width:29px;height:37px;overflow:hidden;font-size:inherit;font-weight:inherit;display:inline-block;}
 #countdown-timer span{font-size:inherit;line-height:0;}
 #collapseBeginner, #collapseIntermediate, #collapseAdvanced{padding-left:2em;}
+.collapse-more{background:transparent url('/static/images/button-more.png') 0 0 no-repeat;display:inline-block;width:24px;height:24px;}
+.collapse-less{background:transparent url('/static/images/button-less.png') 0 0 no-repeat;display:inline-block;width:24px;height:24px;}
 h3.accordion-title{border-top:1px solid #eeeeee;border-bottom:1px solid #eeeeee;padding:.25em;}
 h3.accordion-title img{vertical-align:text-bottom;}
 h3.accordion-title a{text-decoration:none;}
