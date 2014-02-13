@@ -1,0 +1,3 @@
+queue:
+- name: invite-email
+  rate: 1/h

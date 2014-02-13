@@ -540,11 +540,11 @@ The Call to Code Support Team
                 mail.send_mail(sender_address, student.email, subject, body)
                 student.invitation_email_sent = datetime.datetime.now()
                 student.put()
-                self.response.write('True')
+                self.response.write('Invitation email sent to %s.' % student.email)
                 self.response.write(body)
 
             else:
-                self.response.write('False')
+                self.response.write('Invitation email already sent to %s.' % student.email)
 
         else:
             self.response.write('False')

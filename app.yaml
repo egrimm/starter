@@ -25,6 +25,10 @@ handlers:
   script: main.app
   login: admin
   
+- url: /tasks/.*
+  script: tasks.app
+  login: admin
+  
 - url: /.*
   script: main.app
 #  secure: always

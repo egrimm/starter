@@ -6,6 +6,7 @@ RedirectRoute: http://webapp-improved.appspot.com/api/webapp2_extras/routes.html
 
 from webapp2_extras.routes import RedirectRoute
 import handlers
+import taskhandlers
 
 secure_scheme = 'https'
 
@@ -15,9 +16,9 @@ _routes = [
         name='register',
         strict_slash=True),
     RedirectRoute('/register-success',
-    handlers.RegisterSuccessHandler,
-    name='register-success',
-    strict_slash=True),
+        handlers.RegisterSuccessHandler,
+        name='register-success',
+        strict_slash=True),
     RedirectRoute('/register-student',
         handlers.RegisterStudentHandler,
         name='register-student',
@@ -63,11 +64,23 @@ _routes = [
         name='logout',
         strict_slash=True),
 
+    ## Real Nation Links ##
     RedirectRoute('/rn/dashboard',
         handlers.RealNationDashboardHandler,
         name='rn-dashboard',
         strict_slash=True),
 
+    ## Task Handlers ##
+    RedirectRoute('/tasks/invite-student',
+        taskhandlers.InviteStudentHandler,
+        name='invite-student-task',
+        strict_slash=True),
+    RedirectRoute('/tasks/add-invite-student',
+        taskhandlers.AddInviteStudentTask,
+        name='add-invite-student-task',
+        strict_slash=True),
+
+    ## Static Content Links ##
     RedirectRoute('/about',
         handlers.AboutHandler,
         name='about',
