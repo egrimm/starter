@@ -8,7 +8,12 @@ config = {
                             'cookie_name': 'session_name'},
 
     # jinja2 templates
-    'webapp2_extras.jinja2': {'template_path': ['templates']},
+    'webapp2_extras.jinja2': {'template_path': ['templates'],
+        'environment_args': {
+            'autoescape': True,
+            'extensions': ['jinja2.ext.autoescape']
+            }
+        },
 
     'app_name': 'Starter',
 
