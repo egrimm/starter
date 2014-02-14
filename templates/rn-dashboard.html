@@ -5,4 +5,26 @@
 	<h1>RealNation Dashboard</h1>
 </div>
 
+{% if pending_students.count() %}
+    <h2 class="light">Students Pending Parental Consent</h2>
+    {% for student in pending_students %}
+        <p>{{ student.email }}</p>
+    {% endfor %}
+{% endif %}
+
+
+{% if returned_students.count() %}
+    <h2 class="light">Students Received Parental Consent</h2>
+    {% for student in returned_students %}
+        <p>{{ student.email }}</p>
+    {% endfor %}
+{% endif %}
+
+{% if confirmed_students.count() %}
+    <h2 class="light">Students Confirmed Parental Consent</h2>
+    {% for student in confirmed_students %}
+        <p>{{ student.email }}</p>
+    {% endfor %}
+{% endif %}
+
 {% endblock content %}

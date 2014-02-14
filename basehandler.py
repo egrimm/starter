@@ -11,6 +11,8 @@ from webapp2_extras import sessions
 # local application/library specific imports
 import models
 from google.appengine.api import users
+import socket
+from urlparse import urlparse
 
 
 def jinja2_factory(app):
@@ -125,6 +127,12 @@ class BaseHandler(webapp2.RequestHandler):
 
     def render_template(self, filename, **kwargs):
 
+        referer = self.request.referer
+        referer_domain = None
+        if referer != None:
+            parsed_uri = urlparse(referer)
+            referer_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+
         # make all self.view variables available in jinja2 templates
         if hasattr(self, 'view'):
             kwargs.update(self.view.__dict__)
@@ -140,6 +148,9 @@ class BaseHandler(webapp2.RequestHandler):
             'path': self.request.path,
             'query_string': self.request.query_string,
             'session': self.session,
+            'referer': referer,# None or refereing URL
+            'referer_domain': referer_domain,
+            'server': socket.getfqdn(),
         })
         kwargs.update(self.auth_config)
         if self.messages:

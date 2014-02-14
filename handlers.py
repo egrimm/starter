@@ -12,7 +12,7 @@ from basehandler import BaseHandler
 from decorators import teacher_required, \
     student_required, \
     active_student_required, \
-    user_required
+    user_required, same_domain_required
 import role_numbers
 import re
 
@@ -165,6 +165,7 @@ class RegisterHandler(BaseHandler):
         return self.render_template('register.html', **params)
 
     @user_required
+    @same_domain_required # make sure this is working properly!
     def post(self):
         # if a student logs in, we don't want them to be able to access this page
         if self.session.get('is_student') == True:
@@ -482,13 +483,14 @@ class CodeforcesIFrameHandler(BaseHandler):
         from hashlib import sha1
         import hmac
         import time
-        #import config
+        from config import config
 
+        # get the students permanent record
         rec = models.Student.query(
                 models.Student.user_id == self.user_id).get()
 
         ts = int(time.time())# note: need to make sure this is UTC timestamp
-        key = 'blueberries'
+        key = config['push_phrase']
         msg = str(ts) + str(self.user_id)
 
         hashed = hmac.new(key, msg, sha1)
@@ -501,11 +503,27 @@ class CodeforcesIFrameHandler(BaseHandler):
 
         return self.render_template('cf-iframe.html', **params)
 
+    def post(self):
+        """ may allow cf to post back to this same endpoint to handle
+        student competition results. i just dont know yet. """
+        pass
+
 
 class RealNationDashboardHandler(BaseHandler):
 
     def get(self):
         params = {}
+        # pending students
+        pending_students = models.Student.get_consent_pending()
+        # received consent students
+        returned_students = models.Student.get_consent_received()
+        # confirmed consent students
+        confirmed_students = models.Student.get_consent_confirmed()
+
+        params['pending_students'] = pending_students
+        params['returned_students'] = returned_students
+        params['confirmed_students'] = confirmed_students
+
         return self.render_template('rn-dashboard.html', **params)
 
 

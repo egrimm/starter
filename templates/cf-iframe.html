@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!--<script type="text/javascript" src="/static/scripts/easyXDM.min.js"></script>-->
+<!--need this file-->
+<!--<script type="text/javascript" src="/static/scripts/CodeforcesRemote.js"></script>-->
+
 <div class="page-header">
 	<h1>CF</h1>
 </div>
+
+<div id="iframeWrapper"></div>
+
+<!--<script type="text/javascript">
+    CodeforcesRemote.injectIframe(
+            "http://codeforces.host", "/codeforces/context", document.getElementById("iframeWrapper"),
+            380, {{ student_id }}, "{{ auth_token }}", {{ ts }}, "{{ school_cycle }}"
+    );
+</script>-->
 
 <h1>params</h1>
 <p>ts: {{ ts }}</p>
