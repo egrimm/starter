@@ -5,8 +5,6 @@ import logging
 import webapp2
 from google.appengine.api import users # we are using this for authentication
 from google.appengine.ext import ndb
-from google.appengine.api import mail
-import datetime
 
 # local application/library specific imports
 import models # we are using this for authorization and storing of further pii

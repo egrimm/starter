@@ -75,10 +75,10 @@ _routes = [
         taskhandlers.InviteStudentHandler,
         name='invite-student-task',
         strict_slash=True),
-    RedirectRoute('/tasks/add-invite-student',
-        taskhandlers.AddInviteStudentTask,
-        name='add-invite-student-task',
-        strict_slash=True),
+##    RedirectRoute('/tasks/add-invite-student',
+##        taskhandlers.AddInviteStudentTask,
+##        name='add-invite-student-task',
+##        strict_slash=True),
 
     ## Static Content Links ##
     RedirectRoute('/about',
