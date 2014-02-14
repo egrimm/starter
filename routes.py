@@ -31,10 +31,10 @@ _routes = [
         handlers.ValidateStudentHandler,
         name='validate-student',
         strict_slash=True),
-    RedirectRoute('/util/invite-student/<student_key>',
-        handlers.InviteStudentEmailHandler,
-        name='invite-student',
-        strict_slash=True),
+##    RedirectRoute('/util/invite-student/<student_key>',
+##        handlers.InviteStudentEmailHandler,
+##        name='invite-student',
+##        strict_slash=True),
     RedirectRoute('/dashboard',
         handlers.DashboardHandler,
         name='dashboard',
@@ -62,6 +62,12 @@ _routes = [
     RedirectRoute('/logout',
         handlers.LogoutHandler,
         name='logout',
+        strict_slash=True),
+
+    ## Codeforces iframe ##
+    RedirectRoute('/cf/start-coding',
+        handlers.CodeforcesIFrameHandler,
+        name='start-coding',
         strict_slash=True),
 
     ## Real Nation Links ##

@@ -16,4 +16,8 @@ config = {
     'oauth_client_id': '675375269738.apps.googleusercontent.com',
     'oauth_client_secret': 'RrQdiRWE74hGpTuVhaAEZHws',
 
+    #codeforces
+    'push_phrase': 'xaRowera82',
+    'pull_phrase': 'oXodIpAB71',
+
 } # end config

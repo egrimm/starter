@@ -4,3 +4,4 @@ cron:
   url: /tasks/invite-student
   schedule: every 1 hours
   timezone: Europe/Dublin # see http://en.wikipedia.org/wiki/List_of_zoneinfo_time_zones for values
+  

@@ -16,24 +16,24 @@
         <link rel="stylesheet" href="/static/css/style.css"/>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" media="all" /> 
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" media="all" />
     </head>
-    
+
     <body>
-        
+
         <div class="container">
-            
+
             <div class="row">
-			
+
 				<div class="col-sm-3 text-center hidden-xs" id="left-rail">
 					{% block leftrail %}
 						<img src="/static/images/logo-call-to-code.png" style="margin-top:4em;max-width:100%;">
-						
+
 						<div style="position:absolute;bottom:1em;text-align:center;width:90%;">
 							<div id="countdown-timer">
 								<h3>Countdown</h3>
 								<p>Get ready to code in</p>
-								
+
 								<div class="day1">3</div>
 								<div class="day2">5</div>
 								<div style="background-image:none;width:.25em;">:</div>
@@ -44,32 +44,34 @@
 								<div class="col-sm-4 col-sm-offset-2">Days</div>
 								<div class="col-sm-4 text-center">Hours</div>
 							</div>
-							
+
 							<div class="row">
-								<div class="col-sm-11 col-sm-offset-1 text-center" style="padding:1em 0;">							
-									<div class="g-plusone" style="min-height:29px;"></div>									
+								<div class="col-sm-11 col-sm-offset-1 text-center" style="padding:1em 0;">
+									<div class="g-plusone" style="min-height:29px;"></div>
 								</div>
 							</div>
 							<a href="/about">About</a> | <a href="/privacy-policy">Privacy Policy</a> | <a href="/rules">Rules</a><br>
 						</div>
                     {% endblock leftrail %}
                 </div>
-				
+
 				<div class="col-sm-9" id="main-content">
                     {% block menu %}
                         <div class="row" style="padding:.5em 0;">
                             <div class="col-sm-8">
                                 {% if user == None %}
                                     <a href="{{ login_url }}">Sign in</a> or <a href="{{ login_url }}">Register</a>
-								{% else %}
+								{% elif session.get('is_teacher') == True %}
 									{{ email }} | <a href="/dashboard">Dashboard</a> | <a href="/logout">Sign Out</a>
+                                {% else %}
+                                    {{ email }} | <a href="/student-dashboard">Dashboard</a> | <a href="/logout">Sign Out</a>
                                 {% endif %}
                             </div>
                             <div class="col-sm-4">
                                 <a href="http://www.google.com" target="_blank"><img src="/static/images/logo-google.png" class="pull-right"></a>
                             </div>
                         </div>
-                            
+
                         <nav class="navbar navbar-inverse">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-menu">
@@ -77,7 +79,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                            </div>                            
+                            </div>
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="nav navbar-nav">
 									<li><a href="/" {% if path == '/' %}class="active"{% endif %}>Home</a></</li>
@@ -90,7 +92,7 @@
                             </div>
                         </nav>
                     {% endblock menu %}
-                    
+
                     {% if messages|safe %}
                         {% for message in messages %}
                         <p class="alert alert-{{ message[1]|safe }}">
@@ -99,28 +101,28 @@
                         </p>
                         {% endfor %}
                     {% endif %}
-                    
+
                     {% block content %}
                     {% endblock content %}
                 </div>
-				
+
 			</div>
-            
-        </div>        
-        
+
+        </div>
+
         <script src="/static/scripts/bootstrap.min.js"></script>
 		<script>
 			$(function(){
 				$('#left-rail').height(''+$('#main-content').height()+'px');
 			});
-			
+
 		  (function() {
 			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
 			po.src = 'https://apis.google.com/js/platform.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 		  })();
 		</script>
-        
+
     </body>
-    
+
 </html>

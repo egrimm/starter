@@ -474,6 +474,34 @@ class StudentDashboardHandler(BaseHandler):
         return self.render_template('student-dashboard.html', **params)
 
 
+class CodeforcesIFrameHandler(BaseHandler):
+
+    @active_student_required
+    def get(self):
+        params = {}
+        from hashlib import sha1
+        import hmac
+        import time
+        #import config
+
+        rec = models.Student.query(
+                models.Student.user_id == self.user_id).get()
+
+        ts = int(time.time())# note: need to make sure this is UTC timestamp
+        key = 'blueberries'
+        msg = str(ts) + str(self.user_id)
+
+        hashed = hmac.new(key, msg, sha1)
+        auth_token = hashed.hexdigest()
+
+        params['ts'] = ts
+        params['student_id'] = self.user_id
+        params['auth_token'] = auth_token
+        params['school_cycle'] = rec.school_cycle
+
+        return self.render_template('cf-iframe.html', **params)
+
+
 class RealNationDashboardHandler(BaseHandler):
 
     def get(self):
@@ -505,47 +533,47 @@ class ValidateStudentHandler(webapp2.RequestHandler):
 
 
 ## EMAIL HANDLERS ##
-class InviteStudentEmailHandler(webapp2.RequestHandler):
-
-    """ this is ugly, and can (should) be done better """
-
-    def get(self, student_key):
-        # example: /util/invite-student/ahBkZXZ-c3RhcnRlci10ZXN0chQLEgdTdHVkZW50GICAgICAgNAJDA
-        self.response.headers['Content-Type'] = 'text/plain'
-        student_key = ndb.Key(urlsafe=student_key)
-        student = student_key.get()
-        if student is not None:
-            # self.response.write('True')
-            if (student.parental_consent_received == True
-                and student.parental_consent_confirmed == True
-                and (student.invitation_email_sent == None
-                    or student.invitation_email_sent == '')):
-                # NOTE TO SELF: SENDER_ADDRESS NEEDS TO BE UPDATED!
-                sender_address = 'Call to Code Support <EricGrimm500@gmail.com>'
-                subject = 'Welcome to Call to Code!'
-                body = """
-Thank you for your interest in Call to Code!
-Your parental consent has been confirmed, and you are ready to activate your account!
-Please login at the link below:
-
-http://www.calltocode.ie/
-
-Thank you and good luck in the competition!
-
-The Call to Code Support Team
-"""
-
-                mail.send_mail(sender_address, student.email, subject, body)
-                student.invitation_email_sent = datetime.datetime.now()
-                student.put()
-                self.response.write('Invitation email sent to %s.' % student.email)
-                self.response.write(body)
-
-            else:
-                self.response.write('Invitation email already sent to %s.' % student.email)
-
-        else:
-            self.response.write('False')
+##class InviteStudentEmailHandler(webapp2.RequestHandler):
+##
+##    """ this is ugly, and can (should) be done better """
+##
+##    def get(self, student_key):
+##        # example: /util/invite-student/ahBkZXZ-c3RhcnRlci10ZXN0chQLEgdTdHVkZW50GICAgICAgNAJDA
+##        self.response.headers['Content-Type'] = 'text/plain'
+##        student_key = ndb.Key(urlsafe=student_key)
+##        student = student_key.get()
+##        if student is not None:
+##            # self.response.write('True')
+##            if (student.parental_consent_received == True
+##                and student.parental_consent_confirmed == True
+##                and (student.invitation_email_sent == None
+##                    or student.invitation_email_sent == '')):
+##                # NOTE TO SELF: SENDER_ADDRESS NEEDS TO BE UPDATED!
+##                sender_address = 'Call to Code Support <EricGrimm500@gmail.com>'
+##                subject = 'Welcome to Call to Code!'
+##                body = """
+##Thank you for your interest in Call to Code!
+##Your parental consent has been confirmed, and you are ready to activate your account!
+##Please login at the link below:
+##
+##http://www.calltocode.ie/
+##
+##Thank you and good luck in the competition!
+##
+##The Call to Code Support Team
+##"""
+##
+##                mail.send_mail(sender_address, student.email, subject, body)
+##                student.invitation_email_sent = datetime.datetime.now()
+##                student.put()
+##                self.response.write('Invitation email sent to %s.' % student.email)
+##                self.response.write(body)
+##
+##            else:
+##                self.response.write('Invitation email already sent to %s.' % student.email)
+##
+##        else:
+##            self.response.write('False')
 
 
 ## STATIC TEMPLATE HANDLERS ##
